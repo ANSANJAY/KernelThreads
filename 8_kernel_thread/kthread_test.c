@@ -55,7 +55,7 @@ MODULE_LICENSE("GPL");
 static int test_tasks_init(void)
 {
     pr_info("%s: In init\n", __func__);
-    print_thread = kthread_run(print_running_thread, NULL,
+    print_thread = kthread_run( , NULL,
 				"print_running_cpu");
     return 0;
 }
