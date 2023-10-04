@@ -1,4 +1,10 @@
-This Linux kernel module, written in C, is a fine example to demonstrate several key concepts in kernel programming, such as Kernel Threads, Process States, and Kernel Task iteration. Below is a conceptual breakdown of the program:
+This Linux kernel module, written in C, is a fine example to demonstrate several key concepts in kernel programming, such as
+
+-  Kernel Threads,
+-  Process States, 
+- and Kernel Task iteration.
+
+# Below is a conceptual breakdown of the program:
 
 ### 1. **Kernel Thread:**
 The program creates a kernel thread named `print_running_thread` to print out information about processes in a running state. The kernel thread is started at module initialization and is stopped at module exit.
