@@ -1,4 +1,4 @@
-### 1. **Explain the Technical Concept 📘:**
+# 1. **Race condition 📘:**
 The provided Linux Kernel Module creates two kernel threads, `thread1` and `thread2`, that increment a shared counter variable `counter`.
 - The `loopcount` determines how many times each thread will increment the counter and it can be set as a module parameter.
 - However, the increment operation is not protected by any synchronization mechanism, leading to a race condition, where the actual result can be unpredictable.
