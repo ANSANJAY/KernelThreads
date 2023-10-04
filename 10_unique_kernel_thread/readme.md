@@ -1,5 +1,9 @@
-### 1. **Explain the Technical Concept 📘:**
-When creating a new thread, if a thread with the given name already exists, it does not restrict the creation of the new thread. In most threading environments and operating systems, thread names are not required to be unique, and multiple threads can exist with the same name. The operating system usually differentiates threads using thread IDs, which are unique, instead of their names. Thread names are generally used for debugging and informational purposes and do not serve as unique identifiers for threads.
+# 1. **Repetitive  thread name📘:**
+When creating a new thread, if a thread with the given name already exists, it does not restrict the creation of the new thread. 
+
+- In most threading environments and operating systems, thread names are `not required to be unique`, and multiple threads can exist with the same name. 
+- The operating system usually `differentiates threads using thread IDs`, which are unique, instead of their names.
+- Thread names are generally used for debugging and informational purposes and do not serve as unique identifiers for threads.
 
 ### 2. **Curious Questions 🤔:**
    **a. Question:** 
