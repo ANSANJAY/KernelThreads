@@ -1,4 +1,4 @@
-### 1. Explain the Technical Concept 📘
+# 1. Explain the Technical Concept 📘
 
 A **Kernel Thread** in Linux is a specialized task that exclusively runs in kernel mode. 
 
@@ -8,18 +8,33 @@ A **Kernel Thread** in Linux is a specialized task that exclusively runs in kern
 - The creation of a kernel thread involves using the API provided by Linux. 
 - Specifically, `kthread_create` is used to create a kernel thread, but this only creates the thread; it does not run it. 
 - To run the thread, `wake_up_process()` must be invoked. 
-- Additionally, there’s a convenient function, `kthread_run`, that combines creation and waking up processes. 
+
+## or,
+- Additionally, there’s a convenient function, `kthread_run`
+
+---
+
+ that combines creation and waking up processes. 
+
+---
+
+# kthread_top
 - It’s crucial to stop the kernel thread properly using `kthread_stop` to avoid system errors (oops messages).
 
-Kernel threads, like user threads, are represented by `task_struct`, but the notable difference lies in the absence of address space in kernel threads, denoted by having the `mm` variable of `task_struct` set to `NULL`.
+Kernel threads, like user threads, are represented by `task_struct`
+ -  but the notable difference lies in the absence of address space in kernel threads
+ -  denoted by having the `mm` variable of `task_struct` set to `NULL`.
+---
+# 2. Curious Questions 🤔
 
-### 2. Curious Questions 🤔
-
-#### Q: How does a Kernel Thread differ from a User Thread in terms of structure representation in Linux?
+## Q: How does a Kernel Thread differ from a User Thread in terms of structure representation in Linux?
 **A:** Both are represented by `task_struct`, but Kernel Threads have no address space, marked by the `mm` variable of `task_struct` being set to `NULL`.
 
-#### Q: Why is it important to properly stop a Kernel Thread using `kthread_stop`?
-**A:** Properly stopping a Kernel Thread is crucial as not doing so may result in system errors, specifically oops messages, indicating a corruption in the kernel data structure, which could lead to instability or crashes.
+## Q: Why is it important to properly stop a Kernel Thread using `kthread_stop`?
+**A:** Properly stopping a Kernel Thread is crucial as not doing so may result in system errors, 
+- specifically oops messages
+-  indicating a corruption in the kernel data structure 
+- which could lead to instability or crashes.
 
 #### Q: What is the significance of `kthread_should_stop()` in the context of Kernel Thread operations?
 **A:** The `kthread_should_stop()` function is significant as it is used to check whether the kernel thread should stop executing, allowing for the controlled termination of the thread function.
@@ -37,13 +52,13 @@ Creating a Kernel Thread is like hiring a kitchen assistant. You create the assi
 ![](./Screenshot%20from%202023-09-26%2021-15-43.png)
 
 
-## What are the some examples of Kernel Thread?
-=============================================
-1. ksoftirqd is Per CPU kernel thread runs processing softirqd.
+## What are the some examples of Kernel Thread ?
+
+1. `ksoftirqd` is Per CPU kernel thread runs processing softirqd.
 2. kworker is a kernel thread which processes work queues.
 
-How to Create a Kernel Thread?
-====================================
+## How to Create a Kernel Thread?
+
 
 API For creating a kernel thread.
 ```C
@@ -62,6 +77,8 @@ Return Value: Pointer to struct  task_struct
 
 ## Note: **kthread_create** only creates the thread but doesn't run the thread, we need to call **wake_up_process()** with the return value of **kthread_create** as an argument to the wake_up_process for the thread function to run.
 
+---
+
 Linux provides an API which creates the kernel thread and calls wake_up_process().
 
 ```C
@@ -76,7 +93,7 @@ int kthread_stop(struct task_struct *k);
 
 Note: If you don't stop the kernel thread in your `module_exit` function, you will get oops message.
 
-- `kthread_stop` is a blocking call, it waits until the function executed by thread exits. 
+- `kthread_stop` is `blocking call`, it waits until the function executed by thread exits. 
 - `kthread_stop()` flag sets a variable in the task_struct variable which the function  `kthread_should_stop()` running in while(1) should check in each of its loop.
 
 ```C
@@ -90,3 +107,48 @@ int threadfunc(void *data)
 	return 0;
 }
 ```
+---
+
+# Kernel Thread
+- **Definition:**
+  - Exists entirely in kernel-space.
+- **`task_struct` and `mm`:**
+  - `mm` field is set to `NULL`.
+- **Purpose:**
+  - Performs system-level tasks.
+- **Address Space:**
+  - Uses kernel's address space.
+- **Memory Management:**
+  - Does not manage its own user-space memory.
+- **Context Switching:**
+  - More lightweight due to absence of user-space context switch.
+
+### User Thread
+- **Definition:**
+  - Operates in user-space and can switch to kernel-space via system calls.
+- **`task_struct` and `mm`:**
+  - `mm` field points to an `mm_struct`.
+- **Purpose:**
+  - Executes user-level applications.
+- **Address Space:**
+  - Owns a separate virtual memory address space.
+- **Memory Management:**
+  - Manages its own user-space memory.
+- **Context Switching:**
+  - Involves switching user-space memory context, hence heavier than kernel threads.
+
+### Why `mm` is `NULL` for Kernel Threads
+- **No User-Space:**
+  - Kernel threads don't execute in user-space.
+- **Optimization:**
+  - Avoids unnecessary memory management of user-space.
+- **Context Switching:**
+  - Ensures lightweight and quick context switches without altering user-space memory context.
+- **Resource Efficiency:**
+  - Preserves system memory resources by not maintaining separate user-space memory mappings.
+
+### Additional Notes
+- **`active_mm`:**
+  - Kernel threads use `active_mm` to reference the last user-space memory context when needed.
+- **System Stability and Security:**
+  - Separation between user and kernel threads provides isolation, safeguarding kernel operations from user-space anomalies.
